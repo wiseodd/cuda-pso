@@ -18,5 +18,6 @@ float getRandom(float low, float high);
 float getRandomClamped();
 float host_fitness_function(float x[]);
 
-extern "C" void cuda_pso(float *positions, float *velocities, float *pBests, float *gBest);
+extern "C" void cuda_pso(float *positions, float *velocities, float *pBests, 
+                         float *gBest);
 void pso(float *positions, float *velocities, float *pBests, float *gBest);

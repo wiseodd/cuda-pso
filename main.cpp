@@ -12,20 +12,20 @@ int main(int argc, char** argv)
     
     srand((unsigned) time(NULL));
 
-	// Initialize particles
-	for (int i = 0; i < NUM_OF_PARTICLES * NUM_OF_DIMENSIONS; i++)
-	{
-		positions[i] = getRandom(START_RANGE_MIN, START_RANGE_MAX);
-		pBests[i] = positions[i];
-		velocities[i] = 0;
-	}
+    // Initialize particles
+    for (int i = 0; i < NUM_OF_PARTICLES * NUM_OF_DIMENSIONS; i++)
+    {
+        positions[i] = getRandom(START_RANGE_MIN, START_RANGE_MAX);
+        pBests[i] = positions[i];
+        velocities[i] = 0;
+    }
 
-	for (int k = 0; k < NUM_OF_DIMENSIONS; k++)
-		gBest[k] = pBests[k];        
+    for (int k = 0; k < NUM_OF_DIMENSIONS; k++)
+        gBest[k] = pBests[k];        
 
     clock_t begin = clock();
     
-	// PSO main function
+    // PSO main function
     cuda_pso(positions, velocities, pBests, gBest);
     
     clock_t end = clock();
@@ -34,31 +34,31 @@ int main(int argc, char** argv)
             
     printf("Time elapsed : %10.3lf ms\n", 
            (double)(end - begin) / CLOCKS_PER_SEC);
-	
     
-	// gBest berisi nilai minimum
-	for (int i = 0; i < NUM_OF_DIMENSIONS; i++)
-		printf("x%d = %f\n", i, gBest[i]);
+    
+    // gBest berisi nilai minimum
+    for (int i = 0; i < NUM_OF_DIMENSIONS; i++)
+        printf("x%d = %f\n", i, gBest[i]);
 
-	printf("Minimum = %f\n", host_fitness_function(gBest));
-	
+    printf("Minimum = %f\n", host_fitness_function(gBest));
+    
     // ======================== END OF GPU ====================== //
     
 
     // Initialize particles
-	for (int i = 0; i < NUM_OF_PARTICLES * NUM_OF_DIMENSIONS; i++)
-	{
-		positions[i] = getRandom(START_RANGE_MIN, START_RANGE_MAX);
-		pBests[i] = positions[i];
-		velocities[i] = 0;
-	}
+    for (int i = 0; i < NUM_OF_PARTICLES * NUM_OF_DIMENSIONS; i++)
+    {
+        positions[i] = getRandom(START_RANGE_MIN, START_RANGE_MAX);
+        pBests[i] = positions[i];
+        velocities[i] = 0;
+    }
 
-	for (int k = 0; k < NUM_OF_DIMENSIONS; k++)
-		gBest[k] = pBests[k];        
+    for (int k = 0; k < NUM_OF_DIMENSIONS; k++)
+        gBest[k] = pBests[k];        
 
     begin = clock();
     
-	// PSO main function
+    // PSO main function
     pso(positions, velocities, pBests, gBest);
     
     end = clock();
@@ -67,16 +67,16 @@ int main(int argc, char** argv)
             
     printf("Time elapsed : %10.3lf ms\n", 
            (double)(end - begin) / CLOCKS_PER_SEC);
-	
     
-	// gBest berisi nilai minimum
-	for (int i = 0; i < NUM_OF_DIMENSIONS; i++)
-		printf("x%d = %f\n", i, gBest[i]);
+    
+    // gBest berisi nilai minimum
+    for (int i = 0; i < NUM_OF_DIMENSIONS; i++)
+        printf("x%d = %f\n", i, gBest[i]);
 
-	printf("Minimum = %f\n", host_fitness_function(gBest));
-	
+    printf("Minimum = %f\n", host_fitness_function(gBest));
+    
     // ======================== END OF GPU ====================== //
 
-	return 0;
+    return 0;
 }
 
