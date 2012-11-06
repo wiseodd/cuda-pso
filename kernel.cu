@@ -23,13 +23,16 @@ __device__ float fitness_function(float x[])
 		float y = 1 + (x[i] - 1) / 4;
 		float yp = 1 + (x[i + 1] - 1) / 4;
 
-		res += pow(y - 1, 2) * (1 + 10 * pow(sin(phi * yp), 2)) + pow(yn - 1, 2);
+		res += pow(y - 1, 2) * (1 + 10 * pow(sin(phi * yp), 2)) 
+                + pow(yn - 1, 2);
 	}
 
 	return res;
 }
 
-__global__ void kernelUpdateParticle(float *positions, float *velocities, float *pBests, float *gBest, float r1, float r2)
+__global__ void kernelUpdateParticle(float *positions, float *velocities, 
+                                     float *pBests, float *gBest, float r1, 
+                                     float r2)
 {
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     
@@ -70,7 +73,8 @@ __global__ void kernelUpdatePBest(float *positions, float *pBests, float* gBest)
 }
 
 
-extern "C" void cuda_pso(float *positions, float *velocities, float *pBests, float *gBest)
+extern "C" void cuda_pso(float *positions, float *velocities, float *pBests, 
+                         float *gBest)
 {
     int size = NUM_OF_PARTICLES * NUM_OF_DIMENSIONS;
     
@@ -93,20 +97,28 @@ extern "C" void cuda_pso(float *positions, float *velocities, float *pBests, flo
 	
     // Copy particle datas from host to device
 	cudaMemcpy(devPos, positions, sizeof(float) * size, cudaMemcpyHostToDevice);
-    cudaMemcpy(devVel, velocities, sizeof(float) * size, cudaMemcpyHostToDevice);
+    cudaMemcpy(devVel, velocities, sizeof(float) * size, 
+               cudaMemcpyHostToDevice);
     cudaMemcpy(devPBest, pBests, sizeof(float) * size, cudaMemcpyHostToDevice);
-    cudaMemcpy(devGBest, gBest, sizeof(float) * NUM_OF_DIMENSIONS, cudaMemcpyHostToDevice);
+    cudaMemcpy(devGBest, gBest, sizeof(float) * NUM_OF_DIMENSIONS, 
+               cudaMemcpyHostToDevice);
     
     // PSO main function
     for (int iter = 0; iter < MAX_ITER; iter++)
 	{	  
         // Update position and velocity
-        kernelUpdateParticle<<<blocksNum, threadsNum>>>(devPos, devVel, devPBest, devGBest, getRandomClamped(), getRandomClamped());  
+        kernelUpdateParticle<<<blocksNum, threadsNum>>>(devPos, devVel, 
+                                                        devPBest, devGBest, 
+                                                        getRandomClamped(), 
+                                                        getRandomClamped());  
         // Update pBest
-        kernelUpdatePBest<<<blocksNum, threadsNum>>>(devPos, devPBest, devGBest);
+        kernelUpdatePBest<<<blocksNum, threadsNum>>>(devPos, devPBest, 
+                                                     devGBest);
         
         // Update gBest
-        cudaMemcpy(pBests, devPBest, sizeof(float) * NUM_OF_PARTICLES * NUM_OF_DIMENSIONS, cudaMemcpyDeviceToHost);
+        cudaMemcpy(pBests, devPBest, 
+                   sizeof(float) * NUM_OF_PARTICLES * NUM_OF_DIMENSIONS, 
+                   cudaMemcpyDeviceToHost);
         
         for(int i = 0; i < size; i += NUM_OF_DIMENSIONS)
         {
@@ -120,14 +132,17 @@ extern "C" void cuda_pso(float *positions, float *velocities, float *pBests, flo
             }	
         }
         
-        cudaMemcpy(devGBest, gBest, sizeof(float) * NUM_OF_DIMENSIONS, cudaMemcpyHostToDevice);
+        cudaMemcpy(devGBest, gBest, sizeof(float) * NUM_OF_DIMENSIONS, 
+                   cudaMemcpyHostToDevice);
     }
     
     // Retrieve particle datas from device to host
     cudaMemcpy(positions, devPos, sizeof(float) * size, cudaMemcpyDeviceToHost);
-	cudaMemcpy(velocities, devVel, sizeof(float) * size, cudaMemcpyDeviceToHost);
+	cudaMemcpy(velocities, devVel, sizeof(float) * size, 
+               cudaMemcpyDeviceToHost);
     cudaMemcpy(pBests, devPBest, sizeof(float) * size, cudaMemcpyDeviceToHost);
-	cudaMemcpy(gBest, devGBest, sizeof(float) * NUM_OF_DIMENSIONS, cudaMemcpyDeviceToHost); 
+	cudaMemcpy(gBest, devGBest, sizeof(float) * NUM_OF_DIMENSIONS, 
+               cudaMemcpyDeviceToHost); 
     
     
     // cleanup

@@ -15,7 +15,8 @@ float host_fitness_function(float x[])
 		float y = 1 + (x[i] - 1) / 4;
 		float yp = 1 + (x[i + 1] - 1) / 4;
 
-		res += pow(y - 1, 2) * (1 + 10 * pow(sin(phi * yp), 2)) + pow(yn - 1, 2);
+		res += pow(y - 1, 2) * (1 + 10 * pow(sin(phi * yp), 2)) 
+				+ pow(yn - 1, 2);
 	}
 
 	return res;
@@ -46,14 +47,16 @@ void pso(float *positions, float *velocities, float *pBests, float *gBest)
 			float rp = getRandomClamped();
 			float rg = getRandomClamped();
 
-			velocities[i] = OMEGA * velocities[i] + c1 * rp * (pBests[i] - positions[i])
+			velocities[i] = OMEGA * velocities[i] + c1 * rp 
+					* (pBests[i] - positions[i])
 					+ c2 * rg * (gBest[i % NUM_OF_DIMENSIONS] - positions[i]);
 
 			// Update posisi particle
 			positions[i] += velocities[i];
 		}
 
-		for (int i = 0; i < NUM_OF_PARTICLES * NUM_OF_DIMENSIONS; i += NUM_OF_DIMENSIONS)
+		for (int i = 0; i < NUM_OF_PARTICLES * NUM_OF_DIMENSIONS; 
+		     i += NUM_OF_DIMENSIONS)
 		{
 
 			for (int j = 0; j < NUM_OF_DIMENSIONS; j++)
@@ -62,12 +65,14 @@ void pso(float *positions, float *velocities, float *pBests, float *gBest)
 				tempParticle2[j] = pBests[i + j];
 			}
 
-			if (host_fitness_function(tempParticle1) < host_fitness_function(tempParticle2))
+			if (host_fitness_function(tempParticle1) < 
+			    	host_fitness_function(tempParticle2))
 			{
 				for (int k = 0; k < NUM_OF_DIMENSIONS; k++)
 					pBests[k] = positions[i + k];
 
-				if (host_fitness_function(tempParticle2) < host_fitness_function(gBest))
+				if (host_fitness_function(tempParticle2) <
+					 host_fitness_function(gBest))
 				{
 					for (int k = 0; k < NUM_OF_DIMENSIONS; k++)
 						gBest[k] = pBests[i + k];

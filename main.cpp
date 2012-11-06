@@ -32,7 +32,8 @@ int main(int argc, char** argv)
     
     printf("==================== GPU =======================\n");
             
-    printf("Time elapsed : %10.3lf ms\n", (double)(end - begin) / CLOCKS_PER_SEC);
+    printf("Time elapsed : %10.3lf ms\n", 
+           (double)(end - begin) / CLOCKS_PER_SEC);
 	
     
 	// gBest berisi nilai minimum
@@ -64,7 +65,8 @@ int main(int argc, char** argv)
     
     printf("==================== CPU =======================\n");
             
-    printf("Time elapsed : %10.3lf ms\n", (double)(end - begin) / CLOCKS_PER_SEC);
+    printf("Time elapsed : %10.3lf ms\n", 
+           (double)(end - begin) / CLOCKS_PER_SEC);
 	
     
 	// gBest berisi nilai minimum
